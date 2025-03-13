@@ -42,3 +42,37 @@ WHERE DATE_PART('year', post_date::DATE) = 2021
 GROUP BY user_id
 HAVING
 	COUNT(post_id) > 1;
+	
+-- Method 2
+SELECT 
+	user_id, EXTRACT(DAY FROM (MAX(post_date) - MIN(post_date))) AS "days_between"
+FROM posts
+WHERE post_date BETWEEN '2021-01-01' AND '2021-12-31'
+GROUP BY user_id
+HAVING count(post_id) > 1;
+
+-- Method 3
+SELECT 
+	user_id, EXTRACT(DAY FROM (MAX(post_date) - MIN(post_date))) AS "days_between"
+FROM posts,
+WHERE EXTRACT(YEAR FROM post_date) = '2021'
+GROUP BY user_id
+HAVING COUNT(post_id) > 1;
+
+-- App Click-Through Rate (CTR)
+SELECT 
+  app_id,
+  ROUND((SUM(CASE WHEN event_type='click' THEN 1 ELSE 0 END)) * 100.0
+  /
+  (SUM(CASE WHEN event_type='impression' THEN 1 ELSE 0 END)), 2) AS ctr_rate
+FROM events
+WHERE timestamp >= '2022-01-01'
+  AND timestamp < '2023-01-01'
+GROUP BY app_id;
+
+-- Well Paid Employees FANG
+SELECT emp.employee_id, emp.name
+FROM employee AS mgr -- represent's the manager's table
+INNER JOIN employee AS emp -- represent's the employee's table
+  ON mgr.employee_id = emp.manager_id
+WHERE emp.salary > mgr.salary;
