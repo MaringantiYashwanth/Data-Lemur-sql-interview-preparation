@@ -76,3 +76,12 @@ FROM employee AS mgr -- represent's the manager's table
 INNER JOIN employee AS emp -- represent's the employee's table
   ON mgr.employee_id = emp.manager_id
 WHERE emp.salary > mgr.salary;
+
+
+-- Second Day Confirmation
+-- tiktok sql interview question
+SELECT user_id
+FROM emails e
+INNER JOIN texts t
+ON e.email_id = t.email_id
+WHERE signup_action = 'Confirmed' AND t.action_date=e.signup_date + INTERVAL '1 Day';
